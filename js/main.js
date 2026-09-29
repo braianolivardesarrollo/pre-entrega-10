@@ -1,61 +1,27 @@
-const productosIniciales = [
-  {
-    id: 1,
-    nombre: "Pinza",
-    descripcion: "pinza de fuerza, marca knipex",
-    precio: 500,
-    imagen: "./img/pinza.webp",
-  },
-  {
-    id: 2,
-    nombre: "Destornillador Plano",
-    descripcion: "destornillador plano 20mm, knipex",
-    precio: 250,
-    imagen: "./img/destornilladorPlano.webp",
-  },
-  {
-    id: 3,
-    nombre: "Alicate",
-    descripcion: "Alicate corte diagonal, knipex",
-    precio: 600,
-    imagen: "./img/alicateCorteDiag.webp",
-  },
-  {
-    id: 4,
-    nombre: "Destornillador Philips",
-    descripcion: "destornillador punta philips, knipex",
-    precio: 250,
-    imagen: "./img/destornilladorPhilips.webp",
-  },
-  {
-    id: 5,
-    nombre: "Llaves Allen ",
-    descripcion: "juego de llaves allen milimetricas 1mm a 13mm, Bremen",
-    precio: 850,
-    imagen: "./img/llavesAllen.webp",
-  },
-  {
-    id: 6,
-    nombre: "Soldador ",
-    descripcion: "soldador de estaño 70w, Total",
-    precio: 1200,
-    imagen: "./img/soldador.webp",
-  },
-  {
-    id: 7,
-    nombre: "Multimetro",
-    descripcion: "multimetro digital Mod.117, Fluke",
-    precio: 5000,
-    imagen: "./img/multimetroDigital.webp",
-  },
-  {
-    id: 8,
-    nombre: "kit electronica",
-    descripcion: "kit de componentes electrónicos",
-    precio: 1800,
-    imagen: "./img/kitComponentes.webp",
-  },
-];
+let productos = [];
+
+async function cargarProductos() {
+  try {
+    const respuesta = await fetch("./data/productos.json");
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudieron cargar los productos");
+    }
+
+    const productosIniciales = await respuesta.json();
+
+    productos =
+      JSON.parse(localStorage.getItem("productos")) ?? productosIniciales;
+
+    imprimirElementosEnHTML(productos);
+
+  } catch (error) {
+    console.error("Error al cargar los productos:", error);
+
+  } finally {
+    console.log("Finalizó la carga de productos");
+  }
+}
 
 function obtenerCarritoDelStorage() {
   try {
@@ -74,8 +40,6 @@ function obtenerCarritoDelStorage() {
 }
 
 let carrito = obtenerCarritoDelStorage();
-
-let productos = JSON.parse(localStorage.getItem("productos")) ?? productosIniciales;
 
 function guardarProductos() {
   localStorage.setItem("productos", JSON.stringify(productos));
@@ -207,8 +171,6 @@ localStorage.setItem("carrito", JSON.stringify(carrito));
 });
 }
 
-imprimirElementosEnHTML(productos);
-
 imprimirCarritoEnHTML();
 
 const formulario = document.getElementById("formulario");
@@ -265,6 +227,8 @@ function obtenerProductoDelForm() {
 }
 
 obtenerProductoDelForm();
+
+cargarProductos();
 
 setTimeout(() => {
   Swal.fire({

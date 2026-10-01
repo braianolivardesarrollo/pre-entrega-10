@@ -1,6 +1,10 @@
 let productos = [];
 
 async function cargarProductos() {
+   const productosDOM = document.getElementById("productos");
+
+  productosDOM.textContent = "Cargando productos...";
+
   try {
     const respuesta = await fetch("./data/productos.json");
 
@@ -15,8 +19,21 @@ async function cargarProductos() {
 
     imprimirElementosEnHTML(productos);
 
+  Swal.fire({
+  title: "Productos cargados",
+  text: "Los productos se cargaron correctamente.",
+  icon: "success",
+});
+
   } catch (error) {
     console.error("Error al cargar los productos:", error);
+
+     Swal.fire({
+    title: "Error",
+    text: "No se pudieron cargar los productos.",
+    icon: "error",
+  });
+
 
   } finally {
     console.log("Finalizó la carga de productos");
